@@ -1,0 +1,49 @@
+{
+    "os": "Linux-6.2.0-1016-azure-x86_64-with-glibc2.31",
+    "python": "3.10.13",
+    "heartbeatAt": "2023-12-11T18:29:59.873408",
+    "startedAt": "2023-12-11T18:29:59.410704",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "codePathLocal": null,
+    "git": {
+        "remote": "https://github.com/RoysGC/RL_Project",
+        "commit": "cf4f1f3c7b9401f0bd2f080f9880af844d0a28ee"
+    },
+    "email": "132988800+paulafeliu@users.noreply.github.com",
+    "root": "/workspaces/RL_Project",
+    "host": "codespaces-aae4c9",
+    "username": "codespace",
+    "executable": "/home/codespace/.python/current/bin/python3",
+    "cpu_count": 1,
+    "cpu_count_logical": 2,
+    "cpu_freq": {
+        "current": 3032.114,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2946.935,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3117.293,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 31.32598876953125,
+            "used": 15.238014221191406
+        }
+    },
+    "memory": {
+        "total": 7.744106292724609
+    }
+}
