@@ -1,0 +1,44 @@
+{
+    "os": "macOS-10.16-x86_64-i386-64bit",
+    "python": "3.8.8",
+    "heartbeatAt": "2023-12-13T13:54:39.043516",
+    "startedAt": "2023-12-13T13:54:38.430732",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "codePathLocal": null,
+    "git": {
+        "remote": "https://github.com/RoysGC/RL_Project.git",
+        "commit": "22b3430bac15552a3dce1446bbde4aeda5757969"
+    },
+    "email": "1633372@uab.cat",
+    "root": "/Users/roy/Desktop/EXAMPML/RL_Project",
+    "host": "MacBook-MacBook-Pro-de-Roy.local",
+    "username": "roy",
+    "executable": "/Users/roy/opt/anaconda3/bin/python",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2600,
+        "min": 2600,
+        "max": 2600
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2600,
+            "min": 2600,
+            "max": 2600
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 465.62699127197266,
+            "used": 197.88674926757812
+        }
+    },
+    "memory": {
+        "total": 16.0
+    }
+}
