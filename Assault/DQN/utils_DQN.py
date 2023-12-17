@@ -11,6 +11,7 @@ import imageio
 import matplotlib.pyplot as plt
 from IPython.display import display, clear_output
 
+# Configuration class for DQN parameters
 class Config:
     EPSILON_START = 1.0
     EPSILON_END = 0.01
@@ -20,8 +21,8 @@ class Config:
     BATCH_SIZE = 128
     GAMMA = 0.999
 
+# Replay Memory class for storing and sampling experiences
 class ReplayMemory(object):
-
     def __init__(self, capacity):
         self.memory = deque([], maxlen=capacity)
         self.transition = namedtuple('Transition',
@@ -37,10 +38,8 @@ class ReplayMemory(object):
         return len(self.memory)
 
 class DQN(keras.Model):
-
     def __init__(self, n_actions):
         super(DQN, self).__init__()
-
         self.layer1 = layers.Conv2D(16, 5, strides=2, activation="relu")
         self.bn1 = layers.BatchNormalization()
         self.layer2 = layers.Conv2D(16, 5, strides=2, activation="relu")
