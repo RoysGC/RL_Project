@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d import Axes3D
 
-
+#Function that implements the Naive Policy
 def basic_policy(observation):
     score = observation[0]# Extract the first element from the observation
     return 0 if score >= 20 else 1
 
-
+#Updating the values for Q
 def update_Q(env, episode, Q, alpha, gamma):
     # Unpack episode into states, actions, and rewards
     states, actions, rewards = zip(*episode)
@@ -34,6 +34,7 @@ def update_Q(env, episode, Q, alpha, gamma):
     # Return the updated Q-values
     return Q
 
+#Running the monte carlo method function
 def mc_control(env, num_episodes, alpha, gamma=1.0, eps_start=1.0, eps_decay=.99999, eps_min=0.05):
     Q = defaultdict(lambda: np.zeros(env.action_space.n))
     epsilon = eps_start
@@ -84,6 +85,7 @@ def mc_control(env, num_episodes, alpha, gamma=1.0, eps_start=1.0, eps_decay=.99
     policy = dict((k, np.argmax(v)) for k, v in Q.items())
     return policy, Q, returns , epsilons
 
+#Function to test the agent with a given policy
 def run_agentmc(basic_policy, env):
     # Set the total number of episodes for the agent to play
     total_episodes = 100000
@@ -142,6 +144,7 @@ def run_agentmc(basic_policy, env):
     print(f"Percentage of Natural Wins: {(total_natural_wins / total_episodes * 100):.3f}%")
     print(f"Percentage of Losses: {(total_losses / total_episodes * 100):.3f}%")
     print(f"Percentage of Draws: {(total_draws / total_episodes * 100):.3f}%")
+
 
 #Function to plot the policy in a graphical way
 def plot_policy(policy):

@@ -25,8 +25,7 @@ class Config:
 class ReplayMemory(object):
     def __init__(self, capacity):
         self.memory = deque([], maxlen=capacity)
-        self.transition = namedtuple('Transition',
-                        ('state', 'action', 'next_state', 'reward', 'done'))
+        self.transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward', 'done'))
 
     def push(self, *args):
         self.memory.append(self.transition(*args))
@@ -37,6 +36,7 @@ class ReplayMemory(object):
     def __len__(self):
         return len(self.memory)
 
+# DQN Model class defining the neural network architecture
 class DQN(keras.Model):
     def __init__(self, n_actions):
         super(DQN, self).__init__()
@@ -61,39 +61,51 @@ class DQN(keras.Model):
         x = self.layer4(x)
         return self.action(x)
 
-def take_action(state, epsilon, env , model):
+# Function to select an action based on epsilon-greedy strategy
+def take_action(state, epsilon, env, model):
     if random.random() < epsilon:
         return env.action_space.sample()
     else:
         q_values = model.predict(state[np.newaxis, ...])
         return np.argmax(q_values[0])
 
-def optimize_model(memory, config, model , model_target, n_actions, loss_function, optimizer):
+# Function to optimize the DQN model using experience replay
+def optimize_model(memory, config, model, model_target, n_actions, loss_function, optimizer):
+    # Ensure the memory has enough samples to create a batch
     if memory.__len__() < config.BATCH_SIZE:
         return
+    
+    # Sample a batch of transitions from the replay memory
     transitions = memory.sample(config.BATCH_SIZE)
     batch = memory.transition(*zip(*transitions))
 
+    # Extract components of the batch
     state_batch = np.array(batch.state)
     action_batch = np.array(batch.action)
     next_state_batch = np.array(batch.next_state)
-    rewad_batch = np.array(batch.reward)
+    reward_batch = np.array(batch.reward)
     done_batch = np.array(batch.done, dtype=np.int8)
 
+    # Calculate the expected future rewards using the target DQN model
     future_rewards = model_target(next_state_batch)
-    target = rewad_batch + config.GAMMA * tf.reduce_max(future_rewards, axis=-1) * (1 - done_batch)
+    target = reward_batch + config.GAMMA * tf.reduce_max(future_rewards, axis=-1) * (1 - done_batch)
 
+    # Create a one-hot encoding for the selected actions
     action_mask = tf.one_hot(action_batch, n_actions)
 
+    # Use gradient tape to calculate the loss and update the model
     with tf.GradientTape() as tape:
         q_values = model(state_batch)
         q_action = tf.reduce_sum(tf.multiply(q_values, action_mask), axis=-1)
         loss = loss_function(target, q_action)
 
+    # Calculate gradients and apply them using the optimizer
     grads = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(grads, model.trainable_variables))
 
-def plot_rewards (episode_rewards):
+
+# Function to plot rewards per episode during training
+def plot_rewards(episode_rewards):
     plt.figure(figsize=(10, 5))
     plt.plot(episode_rewards)
     plt.title("Rewards per Episode")
@@ -101,15 +113,18 @@ def plot_rewards (episode_rewards):
     plt.ylabel("Reward")
     plt.grid(True)
 
-    #CAMBIAR PATH a DQN
+    # Save the plot as an image
     plot_path = f"./rewards_plot.png"
     plt.savefig(plot_path)
 
-    # Log the plot to WandB
-    #wandb.log({"Training process of DQN": wandb.Image(plot_path)})
+    # Log the plot to WandB or any other visualization tool
+    # wandb.log({"Training process of DQN": wandb.Image(plot_path)})
 
-def take_action_test(state , model):
+
+# Function to select an action using the trained DQN for testing
+def take_action_test(state, model):
     q_values = model.predict(state[np.newaxis, ...])
     return np.argmax(q_values[0])
+
 
 

@@ -13,6 +13,7 @@ from IPython.display import display, clear_output
 from utils_DDQN import *
 import os
 
+# Configuration class for DQN parameters
 class Config:
     EPSILON_START = 1.0
     EPSILON_END = 0.01
@@ -22,6 +23,7 @@ class Config:
     BATCH_SIZE = 128
     GAMMA = 0.999
 
+# Replay Memory class for storing and sampling experiences
 class ReplayMemory(object):
 
     def __init__(self, capacity):
@@ -39,6 +41,7 @@ class ReplayMemory(object):
     def __len__(self):
         return len(self.memory)
 
+# DQN Model class defining the neural network architecture
 class DQN(keras.Model):
 
     def __init__(self, n_actions):
@@ -65,6 +68,7 @@ class DQN(keras.Model):
         x = self.layer4(x)
         return self.action(x)
 
+# Function to select an action based on epsilon-greedy strategy
 def take_action(state, epsilon, env , model):
     if random.random() < epsilon:
         return env.action_space.sample()
@@ -72,16 +76,21 @@ def take_action(state, epsilon, env , model):
         q_values = model.predict(state[np.newaxis, ...])
         return np.argmax(q_values[0])
 
-def optimize_modelDDQN(memory, config, model, model_target , n_actions, loss_function, optimizer):
+# Function to optimize the Double DQN model using experience replay
+def optimize_modelDDQN(memory, config, model, model_target, n_actions, loss_function, optimizer):
+    # Ensure the memory has enough samples to create a batch
     if memory.__len__() < config.BATCH_SIZE:
         return
+    
+    # Sample a batch of transitions from the replay memory
     transitions = memory.sample(config.BATCH_SIZE)
     batch = memory.transition(*zip(*transitions))
 
+    # Extract components of the batch
     state_batch = np.array(batch.state)
     action_batch = np.array(batch.action)
     next_state_batch = np.array(batch.next_state)
-    rewad_batch = np.array(batch.reward)
+    reward_batch = np.array(batch.reward)
     done_batch = np.array(batch.done, dtype=np.int8)
 
     # Calculate Q-values for the next state using the online model
@@ -97,19 +106,25 @@ def optimize_modelDDQN(memory, config, model, model_target , n_actions, loss_fun
         axis=-1
     )
 
-    target = rewad_batch + config.GAMMA * q_values_next_state_target_selected * (1 - done_batch)
+    # Calculate the target Q-values using the Double DQN update rule
+    target = reward_batch + config.GAMMA * q_values_next_state_target_selected * (1 - done_batch)
 
+    # Create a one-hot encoding for the selected actions
     action_mask = tf.one_hot(action_batch, n_actions)
 
+    # Use gradient tape to calculate the loss and update the model
     with tf.GradientTape() as tape:
         q_values = model(state_batch)
         q_action = tf.reduce_sum(tf.multiply(q_values, action_mask), axis=-1)
         loss = loss_function(target, q_action)
 
+    # Calculate gradients and apply them using the optimizer
     grads = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(grads, model.trainable_variables))
+    
     #wandb.log({"loss": loss.numpy()})
-    return loss
+    
+
 
 def plot_rewards (episode_rewards):
     plt.figure(figsize=(10, 5))
