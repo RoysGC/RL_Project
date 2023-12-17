@@ -12,11 +12,12 @@ To install and run this project, the following extra libraries are required (doi
 5. box2d-py
 
 ### Installation
-To install the project, simply clone the repository and execute it. Once the repository is cloned and set up, running the project should not pose any problems. Ensure all dependencies are installed as mentioned above. We have also add the requirements.txt in the repository.
+To install the project, simply clone the repository and execute it. Once the repository is cloned and set up, running the project should not pose any problems. Ensure all dependencies are installed as mentioned above. We have also added the requirements.txt in the repository.
 
 ### Usage
-The project is structured into three main folders, each corresponding to a different part of the project. Inside the 'Assault' folder, there are five additional folders, each for a different implemented model, and another for various gifs as results of the models. In the other two folder there are the notebooks of the respective part and in LunarLander folder there is also a folder of a unique gif as result of the test of the trained model.
+The project is structured into three main folders, each corresponding to a different part of the project. Inside the 'Assault' folder, there are five additional folders, each for a different implemented model, and another for various gifs as results of the models. In the other two folders, there are the notebooks of the respective part, and in LunarLander folder, there is also a folder of a unique gif as a result of the test of the trained model.
 We have also added here the report.
+For each of the different models and folders, the notebook executing the model is separated from an 'utils.py' that contains the different functions and classes used in the execution of the corresponding notebook.
 
 ### Authors
 Paula Feliu and Roger Garcia
